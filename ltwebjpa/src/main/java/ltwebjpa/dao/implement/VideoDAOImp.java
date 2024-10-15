@@ -100,4 +100,14 @@ public class VideoDAOImp implements IVideoDAO{
 		return video;
 	}
 
+	@Override
+	public List<Video> findByCategory(Category category) {
+		// TODO Auto-generated method stub
+		EntityManager enma = JPAConfig.getEntityManager();
+		String sql = "SELECT v FROM Video v WHERE v.category = :category";
+		TypedQuery<Video> query = enma.createQuery(sql, Video.class);
+		query.setParameter("category",category);
+		return query.getResultList();
+	}
+
 }

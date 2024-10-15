@@ -4,6 +4,7 @@ import java.util.List;
 
 import ltwebjpa.dao.IVideoDAO;
 import ltwebjpa.dao.implement.VideoDAOImp;
+import ltwebjpa.entity.Category;
 import ltwebjpa.entity.Video;
 import ltwebjpa.service.IVideoService;
 
@@ -50,6 +51,12 @@ public class VideoServiceImp implements IVideoService{
 	public Video findByID(int id) {
 		// TODO Auto-generated method stub
 		return videoDAO.findByID(id);
+	}
+
+	@Override
+	public List<Video> findByCategory(Category category) {
+		// TODO Auto-generated method stub
+		return videoDAO.findByCategory(category);
 	}
 
 }

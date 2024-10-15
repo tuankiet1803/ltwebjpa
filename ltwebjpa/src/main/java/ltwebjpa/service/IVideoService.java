@@ -2,6 +2,7 @@ package ltwebjpa.service;
 
 import java.util.List;
 
+import ltwebjpa.entity.Category;
 import ltwebjpa.entity.Video;
 
 public interface IVideoService {
@@ -16,6 +17,8 @@ public interface IVideoService {
 	List<Video> findAll();
 
 	List<Video> findByName(String videoname);
+	
+	List<Video> findByCategory(Category category);
 
 	int count();
 }

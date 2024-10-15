@@ -32,7 +32,9 @@
 			</td>
 			<td><a
 				href="<c:url value='/admin/category/edit?id=${cate.categoryId }'/>">Sửa</a> | <a
-				href="<c:url value='/admin/category/delete?id=${cate.categoryId }'/>">Xóa</a></td>
+				href="<c:url value='/admin/category/delete?id=${cate.categoryId }'/>">Xóa</a>| <a
+				href="<c:url value='/admin/category/videos?id=${cate.categoryId }'/>">
+				Xem</a></td>
 		</tr>
 	</c:forEach>
 </table>

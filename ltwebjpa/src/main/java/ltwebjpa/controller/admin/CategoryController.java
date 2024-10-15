@@ -14,15 +14,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.Part;
 import ltwebjpa.Constan;
 import ltwebjpa.entity.Category;
+import ltwebjpa.entity.Video;
 import ltwebjpa.service.ICategoryService;
+import ltwebjpa.service.IVideoService;
 import ltwebjpa.service.implement.CategoryServiceImp;
+import ltwebjpa.service.implement.VideoServiceImp;
 
 @MultipartConfig(fileSizeThreshold = 1024 * 1024, maxFileSize = 1024 * 1024 * 5, maxRequestSize = 1024 * 1024 * 5 * 5)
-@WebServlet(urlPatterns = { "/admin/categories", "/admin/category/add", "/admin/category/insert", 
-		"/admin/category/edit", "/admin/category/update", "/admin/category/delete"})
-public class CategoryController extends HttpServlet{
+@WebServlet(urlPatterns = { "/admin/categories", "/admin/category/add", "/admin/category/insert",
+		"/admin/category/edit", "/admin/category/update", "/admin/category/delete", "/admin/category/videos" })
+public class CategoryController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public ICategoryService cateService = new CategoryServiceImp();
+	public IVideoService videoService = new VideoServiceImp();
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI();
 		resp.setCharacterEncoding("UTF-8");
@@ -47,6 +51,12 @@ public class CategoryController extends HttpServlet{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (url.contains("videos")) {
+			int id = Integer.parseInt(req.getParameter("id"));
+			Category category = cateService.findID(id);
+			List<Video> list = videoService.findByCategory(category);
+			req.setAttribute("listvideo", list);
+			req.getRequestDispatcher("/views/admin/video-list.jsp").forward(req, resp);
 		}
 	}
 
