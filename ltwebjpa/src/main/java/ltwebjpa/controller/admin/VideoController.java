@@ -35,13 +35,13 @@ public class VideoController extends HttpServlet {
 		String url = req.getRequestURI();
 		resp.setCharacterEncoding("UTF-8");
 		req.setCharacterEncoding("UTF-8");
+		List<Category> listcate = cateService.findAll();
+		req.setAttribute("listcate", listcate);
 		if (url.contains("videos")) {
 			List<Video> list = videoService.findAll();
 			req.setAttribute("listvideo", list);
 			req.getRequestDispatcher("/views/admin/video-list.jsp").forward(req, resp);
 		} else if (url.contains("add")) {
-			List<Category> list = cateService.findAll();
-			req.setAttribute("listcate", list);
 			req.getRequestDispatcher("/views/admin/video-add.jsp").forward(req, resp);
 		} else if (url.contains("edit")) {
 			int id = Integer.parseInt(req.getParameter("id"));
@@ -52,13 +52,14 @@ public class VideoController extends HttpServlet {
 			int id = Integer.parseInt(req.getParameter("id"));
 			try {
 				videoService.delete(id);
-				resp.sendRedirect(req.getContextPath() + "/admin/categories");
+				resp.sendRedirect(req.getContextPath() + "/admin/videos");
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		String url = req.getRequestURI();
@@ -69,13 +70,63 @@ public class VideoController extends HttpServlet {
 			String description = req.getParameter("description");
 			int active = Integer.parseInt(req.getParameter("active"));
 			int categoryID = Integer.parseInt(req.getParameter("category"));
-			String poster = "";
+			String poster = ""; 
+			String videoname = "";
 
 			Video video = new Video();
 			video.setTitle(title);
 			video.setDescription(description);
 			video.setActive(active);
 			video.setCategory(cateService.findID(categoryID));
+			String uploadPath = Constan.UPLOAD_DIRECTORY;
+			File uploadDir = new File(uploadPath);
+			if (!uploadDir.exists()) {
+				uploadDir.mkdir();
+			}
+			try {
+				Part part = req.getPart("poster");
+				if (part.getSize() > 0) {
+					String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+					int index = filename.lastIndexOf(".");
+					String ext = filename.substring(index + 1);
+					poster = System.currentTimeMillis() + "." + ext;
+					part.write(uploadPath + "/" + poster);
+					video.setPoster(poster);
+				} else {
+					video.setPoster(poster);
+				}
+				part = req.getPart("video");
+				if (part.getSize() > 0) {
+					String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+					int index = filename.lastIndexOf(".");
+					String ext = filename.substring(index + 1);
+					videoname = System.currentTimeMillis() + "." + ext;
+					part.write(uploadPath + "/" + videoname);
+					video.setVideoname(videoname);
+				} else {
+					video.setVideoname(videoname);
+				}
+			} catch (Exception e) {
+				// TODO: handle exception
+				e.printStackTrace();
+			}
+			videoService.insert(video);
+			resp.sendRedirect(req.getContextPath() + "/admin/videos");
+		} else if (url.contains("update")) {
+			int id = Integer.parseInt(req.getParameter("videoid"));
+			String title = req.getParameter("title");
+			String description = req.getParameter("description");
+			int active = Integer.parseInt(req.getParameter("active"));
+			String poster = "";
+
+			Video video = new Video();
+			video.setVideoId(id);
+			video.setTitle(title);
+			video.setDescription(description);
+			video.setActive(active);
+
+			Video videoold = new Video();
+			String posterold = videoold.getPoster();
 			String uploadPath = Constan.UPLOAD_DIRECTORY;
 			File uploadDir = new File(uploadPath);
 			if (!uploadDir.exists()) {
@@ -91,14 +142,14 @@ public class VideoController extends HttpServlet {
 					part.write(uploadPath + "/" + poster);
 					video.setPoster(poster);
 				} else {
-					video.setPoster(poster);
+					video.setPoster(posterold);
 				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
-			videoService.insert(video);
-			resp.sendRedirect(req.getContextPath() + "/admin/categories");
+			videoService.update(video);
+			resp.sendRedirect(req.getContextPath() + "/admin/videos");
 		}
 	}
 }

@@ -9,10 +9,13 @@
   <label for="image">Poster:</label><br>
   <img height="150" width="200" id="imagess" src="" />
   <input type="file" onchange="chooseFile(this)" id="images" name="poster">
+  <label for="video">Poster:</label><br>
+  <video height="150" width="200" id="imagess" src="" /></video>
+  <input type="file" onchange="chooseFile(this)" id="images" name="video">
   <label for="status">Active:</label><br>
-  <input type="radio" id="staton" name="status" value = "1" checked>
+  <input type="radio" id="staton" name="active" value = "1" checked>
   <label for="status">Dang hoat dong</label><br>
-  <input type="radio" id="statoff" name="status" value = "0" >
+  <input type="radio" id="statoff" name="active" value = "0" >
   <label for="status">Khong hoat dong</label><br>
   <label for="category">The loai</label><br>
   <select name="category" id="cars">

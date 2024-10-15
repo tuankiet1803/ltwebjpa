@@ -36,8 +36,8 @@
 			</td>
 			<td>${video.views }</td>
 			<td><a
-				href="<c:url value='/admin/category/edit?id=${cate.categoryId }'/>">Sửa</a> | <a
-				href="<c:url value='/admin/category/delete?id=${cate.categoryId }'/>">Xóa</a></td>
+				href="<c:url value='/admin/video/edit?id=${video.videoId }'/>">Sửa</a> | <a
+				href="<c:url value='/admin/video/delete?id=${video.videoId }'/>">Xóa</a></td>
 		</tr>
 	</c:forEach>
 </table>
