@@ -23,7 +23,7 @@
 	<c:url value="${videoname.videoname}" var="videoUrl"></c:url>
   </c:if>
   <video src="${videoUrl}"></video>
-  <input type="file" id="images" onchange="chooseFile(this)" name="videoname">
+  <input type="file" id="images" onchange="chooseFile(this)" name="video">
   <label for="status">Active:</label><br>
   <input type="radio" id="staton" name="active" value = "1" ${video.active == 1?'checked':''}>
   <label for="status">Dang hoat dong</label><br>

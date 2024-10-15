@@ -23,7 +23,7 @@ import ltwebjpa.service.implement.VideoServiceImp;
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 20, maxFileSize = 1024 * 1024 * 50, maxRequestSize = 1024 * 1024
 		* 100)
 @WebServlet(urlPatterns = { "/admin/videos", "/admin/video/add", "/admin/video/insert", "/admin/video/edit",
-		"/admin/video/update", "/admin/video/delete" })
+		"/admin/video/update", "/admin/video/delete", "/admin/video/search", "/admin/video/find" })
 public class VideoController extends HttpServlet {
 
 	ICategoryService cateService = new CategoryServiceImp();
@@ -57,6 +57,11 @@ public class VideoController extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		} else if (url.contains("search")) {
+			String findname = req.getParameter("titlesearch");
+			List<Video> list = videoService.findByName(findname);
+			req.setAttribute("listvideo", list);
+			req.getRequestDispatcher("/views/admin/video-search.jsp").forward(req, resp);
 		}
 	}
 
@@ -70,7 +75,7 @@ public class VideoController extends HttpServlet {
 			String description = req.getParameter("description");
 			int active = Integer.parseInt(req.getParameter("active"));
 			int categoryID = Integer.parseInt(req.getParameter("category"));
-			String poster = ""; 
+			String poster = "";
 			String videoname = "";
 
 			Video video = new Video();
@@ -118,6 +123,7 @@ public class VideoController extends HttpServlet {
 			String description = req.getParameter("description");
 			int active = Integer.parseInt(req.getParameter("active"));
 			String poster = "";
+			String videoname = "";
 
 			Video video = new Video();
 			video.setVideoId(id);
@@ -127,13 +133,14 @@ public class VideoController extends HttpServlet {
 
 			Video videoold = new Video();
 			String posterold = videoold.getPoster();
+			String videonameold = videoold.getVideoname();
 			String uploadPath = Constan.UPLOAD_DIRECTORY;
 			File uploadDir = new File(uploadPath);
 			if (!uploadDir.exists()) {
 				uploadDir.mkdir();
 			}
 			try {
-				Part part = req.getPart("image");
+				Part part = req.getPart("poster");
 				if (part.getSize() > 0) {
 					String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
 					int index = filename.lastIndexOf(".");
@@ -144,12 +151,26 @@ public class VideoController extends HttpServlet {
 				} else {
 					video.setPoster(posterold);
 				}
+				part = req.getPart("video");
+				if (part.getSize() > 0) {
+					String filename = Paths.get(part.getSubmittedFileName()).getFileName().toString();
+					int index = filename.lastIndexOf(".");
+					String ext = filename.substring(index + 1);
+					videoname = System.currentTimeMillis() + "." + ext;
+					part.write(uploadPath + "/" + videoname);
+					video.setVideoname(videoname);
+				} else {
+					video.setVideoname(videonameold);
+				}
 			} catch (Exception e) {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
 			videoService.update(video);
 			resp.sendRedirect(req.getContextPath() + "/admin/videos");
+		} else if (url.contains("find")) {
+			String findname = req.getParameter("titlesearch");
+			resp.sendRedirect(req.getContextPath() + "/admin/video/search?titlesearch=" + findname);
 		}
 	}
 }

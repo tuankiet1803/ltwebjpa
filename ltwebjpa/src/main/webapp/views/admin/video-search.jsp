@@ -1,12 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<form  action="/ltwebjpa/admin/video/find" method="post">
-<label id = "search"></label>
-<input type="text" id="" name="titlesearch"/>
-<button type="submit">Search</button>
-</form>
-<a href="/ltwebjpa/admin/video/add">Add Video</a>
 <table border="1" width="100%">
 	<tr>
 		<th>STT</th>
